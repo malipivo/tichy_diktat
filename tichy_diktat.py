@@ -72,6 +72,14 @@ def get_replacement(m):
 def atop(first, second):
     return '${0} \\atop {1}$'.format(first, second)
 
+def mallower(retezec):
+    #print(retezec)
+    posledni=retezec[-1]
+    male=posledni.lower()
+    if male==posledni:
+      return retezec
+    return retezec[0:-1]+"\\mmm{"+posledni+"}"
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Export textu do diktatu v PDF formáte')
@@ -90,6 +98,7 @@ if __name__ == "__main__":
     logging.debug('Vstup: {}'.format(args))
 
     output_file = args.output_file[0] + '.tex'
+    output_file_mal = args.output_file[0] + '-mal.tex'
     output_file_plain = args.output_file[0] + '.txt'
     output_file_solved = args.output_file[0] + '.solved.txt'
     input_string = ''
@@ -113,36 +122,37 @@ if __name__ == "__main__":
     
     template = env.get_template('tichy_diktat.j2')
     
-    spodobovanie_map = { "dz": atop('dz', 'c'),
-                         "dž": atop('dž', 'č'),
-                         "b": atop('b', 'p'),
-                         "p": atop('b', 'p'),
-                         "d": atop('d', 't'),
-                         "t": atop('d', 't'),
-                         "ď": atop('ď', 'ť'),
-                         "ť": atop('ď', 'ť'),
-                         "g": atop('g', 'k'),
-                         "k": atop('g', 'k'),
-                         "h": atop('h', 'ch'),
-                         "ch": atop('h', 'ch'),
-                         "z": atop('z', 's'),
-                         "s": atop('z', 's'),
-                         "ž": atop('ž', 'š'),
-                         "š": atop('ž', 'š'),
-                         "v": '$\\overset{v}{\\underset{f}{u}}$',
-                         "f": '$\\overset{v}{\\underset{f}{u}}$',
-                         "u": '$\\overset{v}{\\underset{f}{u}}$',
-                         "V": '$\\overset{V}{\\underset{F}{U}}$',
-                         "F": '$\\overset{V}{\\underset{F}{U}}$',
-                         "U": '$\\overset{V}{\\underset{F}{U}}$' }
-    yi_map = { "i": atop('i', 'y'),
-                         "y": atop('i', 'y'),
-                         "í": atop('í', 'ý'),
-                         "ý": atop('í', 'ý') }
+    spodobovanie_map = { 
+                         "dz": atop('\\barva{dz}', 'c'),
+                         "dž": atop('\\barva{dž}', 'č'),
+                         "b": atop('\\barva{b}', 'p'),
+                         "p": atop('b', '\\barva{p}'),
+                         "d": atop('\\barva{d}', 't'),
+                         "t": atop('d', '\\barva{t}'),
+                         "ď": atop('\\barva{ď}', 'ť'),
+                         "ť": atop('ď', '\\barva{ť}'),
+                         "g": atop('\\barva{g}', 'k'),
+                         "k": atop('g', '\\barva{k}'),
+                         "h": atop('\\barva{h}', 'ch'),
+                         "ch": atop('h', '\\barva{ch}'),
+                         "z": atop('\\barva{z}', 's'),
+                         "s": atop('z', '\\barva{s}'),
+                         "ž": atop('\\barva{ž}', 'š'),
+                         "š": atop('ž', '\\barva{š}'),
+                         "v": '$\\overset{{\\barva{v}}}{\\underset{f}{u}}$',
+                         "f": '$\\overset{v}{\\underset{{\\barva{f}}}{u}}$',
+                         "u": '$\\overset{v}{\\underset{f}{{\\barva{u}}}}$',
+                         "V": '$\\overset{{\\barva{V}}}{\\underset{F}{U}}$',
+                         "F": '$\\overset{V}{\\underset{{\\barva{F}}}{U}}$',
+                         "U": '$\\overset{V}{\\underset{F}{{\\barva{U}}}}$' }
+    yi_map = { "i": atop('\\barva{i}', 'y'),
+                         "y": atop('i', '\\barva{y}'),
+                         "í": atop('\\barva{í}', 'ý'),
+                         "ý": atop('í', '\\barva{ý}') }
 
     space_map = { " ": ' \hspace{5mm}' }
 
-    input_string = re.sub(r'[^.?" ] *[A-ZÁÉÍÓÚĎŤŇĽŠČŽ]', lambda n: n.group().lower(), input_string)
+    input_string = re.sub(r'[^. \}\$] *[A-ZÁÉÍÓÚĎŤŇĽŠČŽ]', lambda n: mallower(n.group()), input_string)
     input_string = re.sub(r'^.', lambda n: n.group().upper(), input_string, flags=re.M)
 
     char_map = {}
@@ -157,12 +167,17 @@ if __name__ == "__main__":
 
     input_string = multiple_replace(char_map, input_string)
 
-    output = template.render(text=input_string)
+    output = template.render(malbonus="\\nee",malvelke="{black}",malbarva="{black}",text=input_string)
     output_solved = template.render(text=input_string_solved)
+    output_mal = template.render(malbonus="\\ano",malvelke="{red}",malbarva="{blue}",text=input_string)
 
     logging.debug('Zapisujem súbor so zadaním do {}'.format(output_file))
     with open(output_file, 'w') as f:
         f.write(output)
+
+    logging.debug('Zapisujem súbor so zadaním 2 do {}'.format(output_file_mal))
+    with open(output_file_mal, 'w') as f:
+        f.write(output_mal)
 
     logging.debug('Zapisujem súbor s riešením do {}'.format(output_file_solved))
     with open(output_file_solved, 'w') as f:
@@ -170,5 +185,9 @@ if __name__ == "__main__":
 
     logging.debug('Volám xelatex pre súbor so zadaním')
     logging.debug(subprocess.call(['xelatex', output_file]))
+
+    logging.debug('Volám xelatex pre súbor so zadaním 2')
+    logging.debug(subprocess.call(['xelatex', output_file_mal]))
+
     logging.debug('Volám xelatex pre súbor s riešením')
     logging.debug(subprocess.call(['xelatex', output_file_solved]))

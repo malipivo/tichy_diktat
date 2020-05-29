@@ -7,28 +7,44 @@
 \usepackage{newunicodechar}
 \usepackage{cancel}
 \usepackage{hyphenat}
+\usepackage{tikz}
+\tikzset{inner sep=1pt, outer sep=0pt}
+\usepackage{xcolor}
+\def\barva#1{\color{{malbarva}}#1\color{black}}
+\let\BARVA=\barva
+\parindent=0pt
 
-\newunicodechar{ď}{\ifmmode\breve{d}\else ď\fi}
-\newunicodechar{ň}{\ifmmode\breve{n}\else ň\fi}
-\newunicodechar{ľ}{\ifmmode\breve{l}\else ľ\fi}
-\newunicodechar{š}{\ifmmode\breve{s}\else š\fi}
-\newunicodechar{ť}{\ifmmode\breve{t}\else ť\fi}
-\newunicodechar{ž}{\ifmmode\breve{z}\else ž\fi}
-\newunicodechar{č}{\ifmmode\breve{c}\else č\fi}
-\newunicodechar{ô}{\ifmmode\hat{o}\else ô\fi}
-\newunicodechar{í}{\ifmmode\acute{\imath}\else í\fi}
-\newunicodechar{ý}{\ifmmode\acute{y}\else ý\fi}
+\def\ano#1{\begin{tikzpicture}%
+  \setbox0=\hbox{\relax#1}%  
+  \begin{pgfinterruptboundingbox}
+  \node[xshift=-1pt,draw=red,circle,anchor=south west]{\phantom{\relax#1}};
+  \end{pgfinterruptboundingbox}
+  \end{tikzpicture}}
+\def\nee#1{\relax}
+\def\mmm#1{\relax{{malbonus}}#1\color{{malvelke}}#1\color{black}}
+\let\MMM=\mmm
 
-\newunicodechar{Ď}{\ifmmode\breve{D}\else Ď\fi}
-\newunicodechar{Ň}{\ifmmode\breve{N}\else Ň\fi}
-\newunicodechar{Ľ}{\ifmmode\breve{L}\else Ľ\fi}
-\newunicodechar{Š}{\ifmmode\breve{S}\else Š\fi}
-\newunicodechar{Ť}{\ifmmode\breve{T}\else Ť\fi}
-\newunicodechar{Ž}{\ifmmode\breve{Z}\else Ž\fi}
-\newunicodechar{Č}{\ifmmode\breve{C}\else Č\fi}
-\newunicodechar{Ô}{\ifmmode\hat{O}\else Ô\fi}
-\newunicodechar{Í}{\ifmmode\acute{I}\else Í\fi}
-\newunicodechar{Ý}{\ifmmode\acute{Y}\else Ý\fi}
+\newunicodechar{ď}{\ifmmode\text{ď}\else ď\fi}
+\newunicodechar{ň}{\ifmmode\text{ň}\else ň\fi}
+\newunicodechar{ľ}{\ifmmode\text{ľ}\else ľ\fi}
+\newunicodechar{š}{\ifmmode\text{š}\else š\fi}
+\newunicodechar{ť}{\ifmmode\text{ť}\else ť\fi}
+\newunicodechar{ž}{\ifmmode\text{ž}\else ž\fi}
+\newunicodechar{č}{\ifmmode\text{č}\else č\fi}
+\newunicodechar{ô}{\ifmmode\text{ô}\else ô\fi}
+\newunicodechar{í}{\ifmmode\text{í}\else í\fi}
+\newunicodechar{ý}{\ifmmode\text{ý}\else ý\fi}
+
+\newunicodechar{Ď}{\ifmmode\text{Ď}\else Ď\fi}
+\newunicodechar{Ň}{\ifmmode\text{Ň}\else Ň\fi}
+\newunicodechar{Ľ}{\ifmmode\text{Ľ}\else Ľ\fi}
+\newunicodechar{Š}{\ifmmode\text{Š}\else Š\fi}
+\newunicodechar{Ť}{\ifmmode\text{Ť}\else Ť\fi}
+\newunicodechar{Ž}{\ifmmode\text{Ž}\else Ž\fi}
+\newunicodechar{Č}{\ifmmode\text{Č}\else Č\fi}
+\newunicodechar{Ô}{\ifmmode\text{Ô}\else Ô\fi}
+\newunicodechar{Í}{\ifmmode\text{Í}\else Í\fi}
+\newunicodechar{Ý}{\ifmmode\text{Ý}\else Ý\fi}
 
 \doublespacing
 
