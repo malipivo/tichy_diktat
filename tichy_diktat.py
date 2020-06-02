@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 '''
 tichy_diktat
 
@@ -191,3 +192,4 @@ if __name__ == "__main__":
 
     logging.debug('Volám xelatex pre súbor s riešením')
     logging.debug(subprocess.call(['xelatex', output_file_solved]))
+

@@ -10,18 +10,18 @@
 \usepackage{tikz}
 \tikzset{inner sep=1pt, outer sep=0pt}
 \usepackage{xcolor}
-\def\barva#1{\color{{malbarva}}#1\color{black}}
+\def\barva#1{\mathrm{\relax{\color{{malbarva}}#1}\relax}}
 \let\BARVA=\barva
 \parindent=0pt
 
 \def\ano#1{\begin{tikzpicture}%
   \setbox0=\hbox{\relax#1}%  
   \begin{pgfinterruptboundingbox}
-  \node[xshift=-1pt,draw=red,circle,anchor=south west]{\phantom{\relax#1}};
+  \node[xshift=-1pt,draw=red, text depth=1.5ex, rounded corners=.25ex, yshift=-1.0ex, anchor=south west]{\phantom{\relax#1}};
   \end{pgfinterruptboundingbox}
   \end{tikzpicture}}
 \def\nee#1{\relax}
-\def\mmm#1{\relax{{malbonus}}#1\color{{malvelke}}#1\color{black}}
+\def\mmm#1{\relax{{malbonus}}{\relax#1}\color{{malvelke}}#1\color{black}}
 \let\MMM=\mmm
 
 \newunicodechar{ď}{\ifmmode\text{ď}\else ď\fi}
